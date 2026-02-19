@@ -1,9 +1,9 @@
-# Roofing Project Agent
+# Home Improvement Agent
 
-An agentic assistant for homeowners planning roofing projects.
+An agentic assistant for homeowners planning home improvement projects.
 
 This project is being built to move beyond a simple search script into a robust, type-safe multi-step agent that can:
-- Discover and vet roofing contractors
+- Discover and vet  contractors
 - Extract and compare quote details from PDFs
 - Coordinate scheduling and communications with human approval gates
 
@@ -36,7 +36,7 @@ Supporting libraries and patterns:
 
 Input:
 - ZIP code
-- Roof type / requested service
+- Requested service (Roofing/Plumbing/Landscaping/etc.)
 
 Output:
 - Structured JSON list of vetted roofing contractors
