@@ -4,7 +4,7 @@ import os
 from dotenv import load_dotenv
 from firecrawl import FirecrawlApp
 
-from agents.models.contractor import Contractor, ContractorList
+from schema.models import Contractor, ContractorList
 
 logger = logging.getLogger(__name__)
 

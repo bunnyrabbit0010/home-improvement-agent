@@ -1,6 +1,6 @@
 from langgraph.graph import END, StateGraph
 
-from agents.workflows.state import AgentState
+from workflows.state import AgentState
 
 
 def scrape_yelp_node(state: AgentState) -> AgentState:
@@ -40,4 +40,3 @@ def build_discovery_vetting_graph():
     graph.add_edge("synthesize_vetting", END)
 
     return graph.compile()
-

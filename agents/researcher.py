@@ -1,5 +1,5 @@
 import logging
-from agents.tools.discovery import search_contractors
+from tools.firecrawl_tool import search_contractors
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)

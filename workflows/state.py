@@ -1,6 +1,6 @@
 from typing import List, Optional, TypedDict
 
-from agents.models.contractor import VettedContractor
+from schema.models import VettedContractor
 
 
 class AgentState(TypedDict):
