@@ -83,14 +83,33 @@ Planned flow:
 ## Current Status
 
 Current repository status:
-- Prototype script in `agents/researcher.py` that performs contractor discovery/extraction with Firecrawl
-- Initial Pydantic schema for contractor results
-- Core roadmap above defines next build milestones toward full agent behavior
+- Repository has been restructured into modular components: `agents/`, `tools/`, `schema/`, and `workflows/`.
+- Phase 1 workflow graph is implemented in `workflows/discovery_vetting_graph.py` with the following nodes:
+  - `scrape_yelp_node`
+  - `scrape_google_node`
+  - `scrape_bbb_node`
+  - `scrape_website_node`
+  - `synthesize_vetting_node`
+- End-to-end CLI execution is available via `main.py`:
+  - accepts service type, zip code, and target contractor count
+  - executes workflow
+  - prints consolidated synthesis output and flags
+- Tooling split is now explicit:
+  - `tools/firecrawl_tool.py` for discovery/scraping/extraction
+  - `tools/llm_tool.py` for OpenAI-based semantic review summarization
+- Data models have expanded to support enrichment:
+  - Yelp candidate list and selected index in workflow state
+  - `Contractor` includes website/contact fields plus `yelp_profile_url`
+  - URL normalization separates Yelp profile links from official contractor website links
+- Workflow currently runs MVP enrichment/synthesis for selected candidate index `0` (single-candidate path).
 
 ## Near-Term Build Priorities
 
-1. Restructure into modular components (`agents/`, `tools/`, `schema/`, `workflows/`).
-2. Implement a first LangGraph workflow for Phase 1.
-3. Add schema versioning and test fixtures for extraction quality.
-4. Implement quote ingestion/extraction pipeline for Phase 2.
-5. Add MCP-backed calendar/email tools with HITL interrupts for Phase 3.
+1. Extend Phase 1 from single-candidate MVP to full `N`-candidate enrichment and synthesis loop.
+2. Add deterministic ranking/scoring criteria and confidence/provenance tracking per contractor field.
+3. Improve source quality controls:
+   - contractor website fallback when Yelp website is missing
+   - tighter Google/BBB candidate disambiguation and matching
+4. Add workflow and tool tests (state transition tests, schema validation fixtures, and smoke integration tests).
+5. Begin Phase 2 quote ingestion/extraction pipeline with strict schema validation.
+6. Prepare Phase 3 MCP integrations (calendar/email) with explicit HITL approval checkpoints.
