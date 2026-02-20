@@ -10,9 +10,16 @@ if __name__ == "__main__":
     zip_code = input("Enter your ZIP code: ")
     
     logging.info(f"User is looking for {service_type} in {zip_code}.")
-    results = search_contractors(service_type, zip_code)
-    
-    logging.info(f"Found {len(results)} contractors for {service_type} in {zip_code}.")
+    search_result = search_contractors(service_type, zip_code)
+    results = search_result.contractors
+
+    logging.info(
+        "Found %d contractors for %s in %s from %s.",
+        len(results),
+        service_type,
+        zip_code,
+        search_result.source_url,
+    )
 
     logging.info(f"Displaying top 5 results for {service_type} in {zip_code}.")
     for i, c in enumerate(results[:5], 1):

@@ -1,10 +1,11 @@
 import logging
 import os
+from urllib.parse import quote_plus
 
 from dotenv import load_dotenv
 from firecrawl import FirecrawlApp
 
-from schema.models import Contractor, ContractorList
+from schema.models import Contractor, ContractorList, ContractorSearchResult
 
 logger = logging.getLogger(__name__)
 
@@ -17,6 +18,13 @@ def _extract_content(scrape_result) -> str:
     if isinstance(scrape_result, dict):
         return scrape_result.get("content", "") or ""
     return getattr(scrape_result, "content", "") or ""
+
+
+def _build_yelp_search_url(service: str, zip_code: str) -> str:
+    return (
+        f"https://www.yelp.com/search?find_desc={quote_plus(service)}"
+        f"&find_loc={quote_plus(zip_code)}"
+    )
 
 
 def get_google_reviews(contractor_name: str, zip_code: str) -> str:
@@ -107,9 +115,9 @@ def get_bbb_info(contractor_name: str, zip_code: str) -> str:
         return ""
 
 
-def search_contractors(service: str, zip_code: str) -> list[Contractor]:
+def search_contractors(service: str, zip_code: str) -> ContractorSearchResult:
     logger.info("Searching for service='%s' in zip='%s'.", service, zip_code)
-    url = f"https://www.yelp.com/search?find_desc={service}&find_loc={zip_code}"
+    url = _build_yelp_search_url(service, zip_code)
 
     try:
         response = fc_app.extract(
@@ -121,7 +129,12 @@ def search_contractors(service: str, zip_code: str) -> list[Contractor]:
         if response.success:
             raw_data = response.data
             validated = ContractorList.model_validate(raw_data)
-            return validated.contractors
+            return ContractorSearchResult(
+                source_url=url,
+                service_type=service,
+                zip_code=zip_code,
+                contractors=validated.contractors,
+            )
 
         logger.warning(
             "Contractor extraction failed for service='%s', zip='%s': %s",
@@ -129,11 +142,21 @@ def search_contractors(service: str, zip_code: str) -> list[Contractor]:
             zip_code,
             getattr(response, "error", "unknown error"),
         )
-        return []
+        return ContractorSearchResult(
+            source_url=url,
+            service_type=service,
+            zip_code=zip_code,
+            contractors=[],
+        )
     except Exception:
         logger.exception(
             "Failed to search contractors for service='%s', zip='%s'.",
             service,
             zip_code,
         )
-        return []
+        return ContractorSearchResult(
+            source_url=url,
+            service_type=service,
+            zip_code=zip_code,
+            contractors=[],
+        )

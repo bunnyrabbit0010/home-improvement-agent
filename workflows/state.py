@@ -4,6 +4,7 @@ from schema.models import VettedContractor
 
 
 class AgentState(TypedDict):
+    service_type: Optional[str]
     contractor_name: str
     zip_code: str
     contractor_data: Optional[VettedContractor]

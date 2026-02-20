@@ -15,6 +15,13 @@ class ContractorList(BaseModel):
     contractors: List[Contractor]
 
 
+class ContractorSearchResult(BaseModel):
+    source_url: str
+    service_type: str
+    zip_code: str
+    contractors: List[Contractor] = Field(default_factory=list)
+
+
 class ReviewSummary(BaseModel):
     positive_themes: List[str] = Field(default_factory=list, description="Key positive themes from reviews.")
     negative_themes: List[str] = Field(default_factory=list, description="Key negative themes from reviews.")
