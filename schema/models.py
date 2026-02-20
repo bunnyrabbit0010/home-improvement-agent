@@ -10,6 +10,18 @@ class Contractor(BaseModel):
     name: str = Field(description="The name of the company")
     rating: float = Field(description="The Yelp star rating")
     reviews_count: int = Field(description="Number of reviews")
+    yelp_profile_url: Optional[str] = Field(
+        default=None, description="Yelp business profile URL if available."
+    )
+    website: Optional[str] = Field(
+        default=None, description="Official contractor website URL if available."
+    )
+    phone: Optional[str] = Field(
+        default=None, description="Primary business phone number if available."
+    )
+    address: Optional[str] = Field(
+        default=None, description="Business address if available."
+    )
 
 class ContractorList(BaseModel):
     contractors: List[Contractor]
@@ -20,6 +32,13 @@ class ContractorSearchResult(BaseModel):
     service_type: str
     zip_code: str
     contractors: List[Contractor] = Field(default_factory=list)
+
+
+class ContractorWebsiteInfo(BaseModel):
+    source_url: Optional[str] = None
+    services_offered: List[str] = Field(default_factory=list)
+    license_number: Optional[str] = None
+    years_in_business: Optional[int] = None
 
 
 class ReviewSummary(BaseModel):
@@ -38,7 +57,10 @@ class VettedContractor(BaseModel):
     google_review_count: Optional[int]
     bbb_rating: Optional[str] = Field(description="Better Business Bureau rating (e.g., 'A+', 'B-').")
     bbb_accredited: bool
-    services_offered: List[str] = Field(default_factory=list, description="Specific roofing services (e.g., 'TPO', 'Shingle', 'Repair').")
+    services_offered: List[str] = Field(
+        default_factory=list,
+        description="Specific services offered by the contractor.",
+    )
     license_number: Optional[str]
     years_in_business: Optional[int]
     review_summary: Optional[ReviewSummary]
