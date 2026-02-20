@@ -1,2 +1,0 @@
-"""Streamlit app entry point."""
-
